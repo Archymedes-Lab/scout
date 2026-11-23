@@ -1,0 +1,310 @@
+/*
+ * SCOUT — "Sea Chart". Sage's Swiss structure (~/sage/web/DESIGN.md: visible grid, numbered rules, one signal) in Scout's
+ * own voice: an azure sea-chart signal on cool paper with Prussian ink, a sky-to-steel-teal data scale, IBM Plex Sans and
+ * Plex Mono, softly rounded surfaces and pill controls, and topographic contour maps with pins instead of hills.
+ * Jev: azure 0.61, Plex 0.75, soft surfaces 0.74, contours 0.87.
+ *
+ * The International Typographic Style, in blue: a strict, visible 12-column grid; one neo-grotesk family set flush left,
+ * large and tight; numbered sections over hard rules; modules that share 1px hairlines instead of floating cards; square
+ * corners; one cobalt signal for the next step and a scale of blues for everything else. Light paper (Jev 1.0), square
+ * (Jev 1.0), the hills kept full-bleed as a blue wash (Jev 0.92). The grotesk is the founders' brief ("Swiss UI"); Jev
+ * leaned serif (0.72) and was overruled.
+ *
+ * Tokens are CSS variables on :root, mapped into Tailwind with `@theme inline`; primitives are `@utility` blocks.
+ * Variable names (--blue, --dawn…) are kept from the earlier systems so every primitive keeps reading them.
+ */
+@import "tailwindcss";
+
+@custom-variant hover-fine (@media (hover: hover) and (pointer: fine) { &:hover });
+
+:root {
+  /* Signal: cobalt, the next step. White on it. */
+  --blue: #0b6fc2;
+  --blue-hover: #095da4;
+  --blue-top: #1880d6;
+  --blue-base: #0a64b2;
+  --blue-bright: #0a63ad;        /* signal as text on paper */
+  --blue-soft: rgb(11 111 194 / 0.08);
+  --blue-line: rgb(11 111 194 / 0.32);
+  --on-signal: #ffffff;
+  /* The blue scale: decoration, data, the hills. */
+  --dawn: #8cc4e6;               /* sky */
+  --dawn-light: #dcedf8;         /* shallows */
+  --dawn-deep: #3f7f9a;          /* steel teal */
+  --dawn-soft: rgb(140 196 230 / 0.16);
+  --sage: #4f8aa6;
+  --sage-deep: #12395a;
+  --moss: #0b2540;               /* Prussian */
+
+  /* Paper */
+  --bg: #f2f6f9;
+  --bg-raised: #ffffff;
+  --surface: #ffffff;
+  --surface-hover: #f8fbfd;
+  --glass: rgb(255 255 255 / 0.82);
+  --glass-strong: rgb(255 255 255 / 0.96);
+  --frost: rgb(11 37 64 / 0.04);
+  --frost-hover: rgb(11 37 64 / 0.07);
+  --ink: #0b2540;
+  --text: rgb(11 37 64 / 0.84);
+  --muted: rgb(11 37 64 / 0.6);
+  --faint: rgb(11 37 64 / 0.42);
+  --hair: rgb(11 37 64 / 0.08);
+  --line: rgb(11 37 64 / 0.13);
+  --line-strong: rgb(11 37 64 / 0.28);
+  --grid-line: rgb(11 111 194 / 0.06);
+  /* Status, written in words; colour only supports. */
+  --success: #0b7d62;
+  --success-soft: rgb(11 125 98 / 0.08);
+  --warning: #a6560f;
+  --warning-soft: rgb(166 86 15 / 0.08);
+  --danger: #c0283c;
+  --danger-soft: rgb(192 40 60 / 0.07);
+
+  --edge: inset 0 1px 0 rgb(255 255 255 / 0.9);
+  --focus: 0 0 0 2px var(--bg), 0 0 0 4px var(--blue);
+  --blur: 16px;
+
+  color-scheme: light;
+}
+
+@theme inline {
+  --color-*: initial;
+  --color-transparent: transparent;
+  --color-white: #fff;
+  --color-black: #000;
+  --color-bg: var(--bg);
+  --color-raised: var(--bg-raised);
+  --color-surface: var(--surface);
+  --color-surface-hover: var(--surface-hover);
+  --color-glass: var(--glass);
+  --color-glass-strong: var(--glass-strong);
+  --color-frost: var(--frost);
+  --color-frost-hover: var(--frost-hover);
+  --color-ink: var(--ink);
+  --color-text: var(--text);
+  --color-muted: var(--muted);
+  --color-faint: var(--faint);
+  --color-hair: var(--hair);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-signal: var(--blue);
+  --color-signal-hover: var(--blue-hover);
+  --color-signal-bright: var(--blue-bright);
+  --color-signal-soft: var(--blue-soft);
+  --color-signal-line: var(--blue-line);
+  --color-on-signal: var(--on-signal);
+  --color-dawn: var(--dawn);
+  --color-dawn-light: var(--dawn-light);
+  --color-dawn-deep: var(--dawn-deep);
+  --color-dawn-soft: var(--dawn-soft);
+  --color-sage: var(--sage);
+  --color-sage-deep: var(--sage-deep);
+  --color-moss: var(--moss);
+  --color-success: var(--success);
+  --color-success-soft: var(--success-soft);
+  --color-warning: var(--warning);
+  --color-warning-soft: var(--warning-soft);
+  --color-danger: var(--danger);
+  --color-danger-soft: var(--danger-soft);
+
+  --font-display: var(--font-plex-sans), "IBM Plex Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --font-sans: var(--font-plex-sans), "IBM Plex Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --font-mono: var(--font-plex-mono), "IBM Plex Mono", ui-monospace, Menlo, monospace;
+}
+
+@theme {
+  --text-mega: clamp(4rem, 2rem + 9vw, 10rem);
+  --text-mega--line-height: 0.88;
+  --text-d1: clamp(2.75rem, 1.4rem + 5vw, 6rem);
+  --text-d1--line-height: 0.92;
+  --text-d2: clamp(2.25rem, 1.4rem + 3vw, 4.25rem);
+  --text-d2--line-height: 0.95;
+  --text-h1: clamp(1.75rem, 1.35rem + 1.4vw, 2.5rem);
+  --text-h1--line-height: 1.05;
+  --text-h2: clamp(1.35rem, 1.2rem + 0.6vw, 1.75rem);
+  --text-h2--line-height: 1.15;
+  --text-h3: 1.125rem;
+  --text-h3--line-height: 1.3;
+  --text-lead: 1.1875rem;
+  --text-lead--line-height: 1.45;
+  --text-label: 0.6875rem;
+  --text-label--line-height: 1.3;
+
+  --tracking-display: -0.03em;
+  --tracking-heading: -0.02em;
+  --tracking-label: 0.08em;
+  --tracking-poster: 0.14em;
+
+  /* Soft: rounded surfaces, pill controls (Jev 0.74). */
+  --radius-xs: 2px;
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-pill: 999px;
+
+  --shadow-1: 0 1px 0 rgb(11 37 64 / 0.04);
+  --shadow-2: 0 1px 0 rgb(11 37 64 / 0.04), 0 18px 40px -18px rgb(11 37 64 / 0.22);
+  --shadow-glow: 0 10px 24px -12px rgb(11 111 194 / 0.5);
+  --shadow-star: 0 0 0 3px rgb(11 111 194 / 0.12);
+  --shadow-panel: 0 1px 0 rgb(11 37 64 / 0.04);
+
+  --ease-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-swing: cubic-bezier(0.65, 0, 0.35, 1);
+
+  --animate-rise: rise 900ms var(--ease-expo) both;
+  --animate-fade: fade 560ms var(--ease-expo) both;
+  --animate-shimmer: shimmer 1.6s linear infinite;
+  --animate-scan: scan 1.4s var(--ease-swing) infinite;
+  --animate-grow: grow 1000ms var(--ease-expo) both;
+  --animate-ring: ring 1.4s var(--ease-swing) infinite;
+  --animate-star: blink 1.2s steps(2, jump-none) infinite;
+  --animate-drift: drift 38s linear infinite alternate;
+  --animate-twinkle: twinkle 3.2s var(--ease-swing) infinite;
+
+  @keyframes rise { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+  @keyframes fade { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes shimmer { from { background-position: 100% 0; } to { background-position: -200% 0; } }
+  @keyframes scan { from { transform: translateX(-100%); } to { transform: translateX(400%); } }
+  @keyframes grow { from { transform: scaleX(0); } }
+  @keyframes ring { 0% { box-shadow: 0 0 0 0 rgb(11 111 194 / 0.35); } 70%, 100% { box-shadow: 0 0 0 8px transparent; } }
+  @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.25; } }
+  @keyframes drift { from { transform: translateX(-3%); } to { transform: translateX(3%); } }
+  @keyframes twinkle { 0%, 100% { opacity: 0.95; } 50% { opacity: 0.35; } }
+}
+
+/* ── Base ─────────────────────────────────────────────────────────── */
+@layer base {
+  html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+  body {
+    min-height: 100dvh; color: var(--text); background: var(--bg);
+    font-family: var(--font-sans); font-size: 15px; font-feature-settings: "ss01", "cv11";
+    -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; overflow-x: clip;
+  }
+  h1, h2, h3, h4 { color: var(--ink); font-weight: 500; text-wrap: balance; }
+  p { text-wrap: pretty; }
+  /* Emphasis in a headline is the signal colour, same weight, no italic: Swiss restraint. */
+  .t-display em, .t-heading em { font-style: normal; color: var(--blue); }
+  ::selection { background: var(--blue); color: #fff; }
+  :focus { outline: none; }
+  :focus-visible { box-shadow: var(--focus); }
+  button { cursor: pointer; }
+  a, button { -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
+  input::placeholder, textarea::placeholder { color: var(--faint); }
+  select option { background: #fff; color: var(--ink); }
+  * { scrollbar-width: thin; scrollbar-color: var(--line) transparent; }
+}
+
+/* ── Type ─────────────────────────────────────────────────────────── */
+@utility t-display { font-family: var(--font-display); font-weight: 500; letter-spacing: var(--tracking-display); color: var(--ink); font-feature-settings: "ss01", "cv11"; }
+@utility t-heading { font-family: var(--font-display); font-weight: 500; letter-spacing: var(--tracking-heading); color: var(--ink); }
+@utility t-label {
+  font-family: var(--font-mono); font-size: var(--text-label); line-height: 1.3; font-weight: 500; letter-spacing: var(--tracking-label);
+  text-transform: uppercase; color: var(--faint);
+}
+@utility t-poster { font-family: var(--font-display); font-weight: 600; letter-spacing: var(--tracking-poster); text-transform: uppercase; }
+@utility t-num { font-family: var(--font-mono); font-variant-numeric: tabular-nums; letter-spacing: 0; }
+@utility measure { max-width: 62ch; }
+
+/* ── Surfaces: modules on a grid, not floating cards ─────────────── */
+@utility glass {
+  position: relative; background: var(--glass); backdrop-filter: blur(var(--blur)); -webkit-backdrop-filter: blur(var(--blur));
+  box-shadow: inset 0 0 0 1px var(--line);
+}
+@utility glass-strong { background: var(--glass-strong); }
+/* A white module with a hairline; on hover a cobalt edge marks it as the one you are about to open. */
+@utility card {
+  position: relative; background: var(--surface); border-radius: 12px;
+  box-shadow: inset 0 0 0 1px var(--hair), 0 1px 2px rgb(11 37 64 / 0.04), 0 10px 28px -18px rgb(11 37 64 / 0.22);
+  transition: background-color 240ms var(--ease-expo), box-shadow 240ms var(--ease-expo);
+}
+@utility card-hover {
+  &:hover { background: #fff; box-shadow: inset 0 0 0 1px var(--blue-line), 0 14px 32px -16px rgb(11 111 194 / 0.35); transform: translateY(-1px); }
+}
+/* Cells that share 1px rules: on a grid container, children become modules separated by hairlines. */
+@utility cells {
+  display: grid; gap: 1px; background: var(--line); box-shadow: 0 0 0 1px var(--line); border-radius: 12px; overflow: hidden;
+  & > * { background: var(--surface); }
+}
+@utility rows { & > * + * { border-top: 1px solid var(--hair); } }
+@utility hairline { box-shadow: inset 0 0 0 1px var(--hair); }
+@utility ring-line { box-shadow: inset 0 0 0 1px var(--line); }
+@utility spot { isolation: isolate; /* no cursor glow in the Swiss system */ }
+
+/* The rule under a title: 2px cobalt, one column wide. */
+@utility rule-signal { width: 64px; height: 2px; border: 0; background: var(--blue); }
+
+/* Graph-paper texture for quiet surfaces (empty states). */
+@utility contours {
+  background-image: linear-gradient(var(--grid-line) 1px, transparent 1px), linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+/* The one input that matters on a screen. */
+@utility decide-bar {
+  position: relative; display: flex; align-items: flex-end; gap: 12px; padding: 8px 8px 8px 18px; border-radius: 16px;
+  background: #fff; box-shadow: inset 0 0 0 1px var(--line-strong);
+  transition: box-shadow 200ms var(--ease-expo);
+  &:focus-within { box-shadow: inset 0 0 0 2px var(--blue), 0 12px 32px -16px rgb(11 111 194 / 0.3); }
+  & textarea, & input { flex: 1; min-width: 0; background: transparent; border: 0; font-size: max(16px, 1.0625rem); font-weight: 400; line-height: 1.45; color: var(--ink); padding: 11px 0; resize: none; field-sizing: content; max-height: 200px; }
+  & textarea:focus-visible, & input:focus-visible { box-shadow: none; }
+}
+
+@utility field {
+  width: 100%; min-height: 40px; padding: 9px 14px; border-radius: 10px; border: 0;
+  background: #fff; box-shadow: inset 0 0 0 1px var(--line); color: var(--ink); font-size: 0.9375rem;
+  /* 16px on phones: iOS zooms into any smaller field on focus. */
+  @media (pointer: coarse) { font-size: 16px; }
+  transition: box-shadow 160ms var(--ease-expo);
+  &:hover { box-shadow: inset 0 0 0 1px var(--line-strong); }
+  &:focus { box-shadow: inset 0 0 0 2px var(--blue); }
+  &[aria-invalid="true"] { box-shadow: inset 0 0 0 1px var(--danger); }
+}
+@utility field-select {
+  appearance: none; padding-right: 34px; background-repeat: no-repeat; background-position: right 12px center;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='none' stroke='%230a1a33' stroke-width='1.5'%3E%3Cpath d='M3 4.5 6 7.5 9 4.5'/%3E%3C/svg%3E");
+}
+
+@utility skeleton {
+  background: linear-gradient(90deg, rgb(11 37 64 / 0.04) 0%, rgb(11 37 64 / 0.08) 40%, rgb(11 37 64 / 0.04) 80%);
+  background-size: 300% 100%; animation: var(--animate-shimmer);
+}
+@utility scan-line {
+  position: relative; height: 1px; background: var(--line); overflow: hidden;
+  &::after { content: ""; position: absolute; inset: 0 auto 0 0; width: 30%; background: linear-gradient(90deg, transparent, var(--blue), transparent); animation: var(--animate-scan); }
+}
+@utility no-scrollbar { scrollbar-width: none; &::-webkit-scrollbar { display: none; } }
+@utility grain { display: none; }
+
+/* Full-bleed blue wash of hills behind a page header, fading into paper. */
+@utility sky {
+  position: absolute; inset: 0 0 auto; height: 520px; z-index: -1; overflow: hidden; pointer-events: none;
+  @media (max-width: 640px) { height: 300px; }
+  & > svg { width: 100%; height: 100%; }
+  &::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, transparent 0%, transparent 46%, rgb(242 246 249 / 0.72) 74%, var(--bg) 100%); }
+}
+
+/* The visible 12-column grid: the Swiss scaffold, drawn faintly across the page. */
+@utility grid-lines {
+  position: absolute; top: 0; bottom: 0; pointer-events: none; z-index: -1; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: 24px;
+  & > i { box-shadow: inset 1px 0 0 var(--grid-line), inset -1px 0 0 var(--grid-line); }
+}
+
+@utility prose-sage {
+  color: var(--text); font-size: 0.9375rem; line-height: 1.6;
+  & h1, & h2, & h3 { font-weight: 600; color: var(--ink); margin: 1.4em 0 0.5em; letter-spacing: var(--tracking-heading); }
+  & h1 { font-size: 1.375rem; } & h2 { font-size: 1.1875rem; } & h3 { font-size: 1rem; }
+  & p { margin: 0.6em 0; } & ul, & ol { margin: 0.6em 0; padding-left: 1.2em; } & ul { list-style: square; } & ol { list-style: decimal; }
+  & li { margin: 0.25em 0; } & li::marker { color: var(--blue); } & strong { color: var(--ink); font-weight: 600; }
+  & code { font-family: var(--font-mono); font-size: 0.85em; background: var(--frost); padding: 1px 5px; }
+}
+
+/* Scroll reveal (components/Reveal.tsx). */
+[data-reveal] { opacity: 0; transform: translateY(14px); transition: opacity 700ms var(--ease-expo), transform 900ms var(--ease-expo); transition-delay: var(--delay, 0ms); }
+[data-reveal="in"] { opacity: 1; transform: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 1ms !important; animation-delay: 0ms !important; transition-duration: 1ms !important; scroll-behavior: auto !important; }
+  [data-reveal] { opacity: 1; transform: none; }
+}

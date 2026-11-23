@@ -1,0 +1,24 @@
+{
+  "name": "scout",
+  "private": true,
+  "type": "module",
+  "description": "Scout: where to promote Argus (cdm) and who to reach (Exa + Orion). Decides and prepares; archymedes-gtm sends.",
+  "bin": {
+    "scout": "src/cli.ts"
+  },
+  "scripts": {
+    "scout": "bun src/cli.ts",
+    "engine": "bun src/cli.ts engine",
+    "web": "cd web && bun run dev",
+    "dev": "bun run scripts/dev.ts",
+    "cycle": "bun src/cli.ts cycle",
+    "test": "bun test",
+    "typecheck": "bunx tsc --noEmit && cd web && bunx tsc --noEmit",
+    "check": "bun run typecheck && bun test",
+    "snapshot": "bun scripts/snapshot.ts"
+  },
+  "devDependencies": {
+    "@types/bun": "^1.3.0",
+    "typescript": "^5.9.3"
+  }
+}

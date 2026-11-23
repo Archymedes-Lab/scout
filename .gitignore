@@ -1,0 +1,8 @@
+node_modules/
+data/*.db*
+data/reports/
+.env
+.archymedes/
+__pycache__/
+.claude/settings.local.json
+web/data/
